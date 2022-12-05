@@ -1,4 +1,4 @@
-# enade_2018
+# Enade 2018
 
 The objective of this project is to make a quick exploratory data analysis on economics course performance on Enade's 2018 exam. I aim to take a closer look at the factors that may be affecting students grades on the exam, like parents education, household per capita income, sex, race and so on.
 
