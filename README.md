@@ -7,9 +7,10 @@ In 14 august 2018 was instituted the Lei Geral de Proteção dos Dados (General 
 Another approach is to group by institution, looking if the institutions where students in general have higher parents education or higher household per capita income haver better grades.
 
 Relevant variables to be selected are:
- • CO_IES (institution code)
- • CO_CURSO (course code)
- • CO_GRUPO == 13 (identifies economics students)
- • TP_SEXO (identifies students sex), from microdados2018_arq5
+ • CO_IES (institution code), from microdados2018_arq1
+ • CO_GRUPO == 13 (identifies economics students), from from microdados2018_arq1
+ • CO_CURSO (course code), from microdados2018_arq3
  • TP_PR_GER == 555 (identify if the student went to do the exam), from microdados2018_arq3
+ • NT_GER (exam scores), from microdados2018_arq3
+ • TP_SEXO (identifies students sex), from microdados2018_arq5
  
