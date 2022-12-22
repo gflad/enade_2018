@@ -88,3 +88,58 @@ df <- inner_join(df, arq8, by = "CO_CURSO") %>%
 
 df <- df %>% 
   select(-c("NU_ANO", "QE_I02", "negros_dummy"))
+
+# grafico
+ggplot(df) +
+  aes(x = media_negros, y = nota_media) +
+  geom_point(shape = "circle", size = 1.5, colour = "#112446") +
+  labs(x = "Média de negros na turma", y = "Nota média") +
+  geom_smooth(method = "lm", formula = y~x)
+theme_classic()
+
+
+######### arquivo 10 (escolaridade do pai)
+arquivo10 <- read_delim("microdados2018_arq10.txt", 
+                       delim = ";", escape_double = FALSE, trim_ws = TRUE)
+
+teste <- inner_join(arq3, arquivo10, by = "CO_CURSO")
+
+
+teste %>%
+ filter(!is.na(QE_I04),
+        QE_I04 %in% c("A", "B", "C", "D", "E", "F")) %>%
+ ggplot() +
+ aes(x = nota_media, fill = QE_I04) +
+ geom_density(adjust = 1L, alpha = 0.7) +
+ scale_fill_hue(direction = 1,
+                labels=c('Nenhuma', 'Fundamental (1º ao 5º)',
+                         'Fundamental (6º ao 9º)', 'Ensino Médio',
+                         'Graduação', 'Pós-Graduação')) +
+ labs(x = "Nota média",
+      y = " ",
+      fill = "Escolaridade do pai") +
+ theme_minimal()
+
+
+######### arquivo 11 (escolaridade da mãe)
+arquivo11 <- read_delim("microdados2018_arq11.txt", 
+                        delim = ";", escape_double = FALSE, trim_ws = TRUE)
+
+teste <- inner_join(arq3, arquivo11, by = "CO_CURSO")
+
+
+teste %>%
+  filter(!is.na(QE_I05),
+         QE_I05 %in% c("A", "B", "C", "D", "E", "F")) %>%
+  ggplot() +
+  aes(x = nota_media, fill = QE_I05) +
+  geom_density(adjust = 1L, alpha = 0.7) +
+  scale_fill_hue(direction = 1,
+                 labels=c('Nenhuma', 'Fundamental (1º ao 5º)',
+                          'Fundamental (6º ao 9º)', 'Ensino Médio',
+                          'Graduação', 'Pós-Graduação')) +
+  labs(x = "Nota média",
+       y = " ",
+       fill = "Escolaridade da mãe") +
+  theme_minimal()
+
