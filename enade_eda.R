@@ -61,10 +61,13 @@ df <- df %>%
 # grafico
 ggplot(df) +
   aes(x = media_mulheres, y = nota_media) +
-  geom_point(shape = "circle", size = 1.5, colour = "#112446") +
+  geom_point(shape = "circle",
+             size = 1.5,
+             colour = "#112446",
+             alpha = 0.8) +
   labs(x = "Média de mulheres na turma", y = "Nota média") +
-  geom_smooth(method = "lm", formula = y~x)
-  theme_classic()
+  geom_smooth(method = "lm", formula = y~x) +
+  theme_minimal()
 
 
 ######### arquivo 8 (cor/raca)
@@ -92,10 +95,25 @@ df <- df %>%
 # grafico
 ggplot(df) +
   aes(x = media_negros, y = nota_media) +
-  geom_point(shape = "circle", size = 1.5, colour = "#112446") +
+  geom_point(shape = "circle",
+             size = 1.5,
+             colour = "#112446",
+             alpha = 0.8) +
   labs(x = "Média de negros na turma", y = "Nota média") +
-  geom_smooth(method = "lm", formula = y~x)
-theme_classic()
+  geom_smooth(method = "lm", formula = y~x) +
+  theme_minimal()
+
+df %>% 
+  filter(media_negros < 1) %>% 
+ggplot() +
+  aes(x = media_negros, y = nota_media) +
+  geom_point(shape = "circle",
+             size = 1.5,
+             colour = "#112446",
+             alpha = 0.8) +
+  labs(x = "Média de negros na turma", y = "Nota média") +
+  geom_smooth(method = "lm", formula = y~x) +
+  theme_minimal()
 
 
 ######### arquivo 10 (escolaridade do pai)
@@ -143,3 +161,49 @@ teste %>%
        fill = "Escolaridade da mãe") +
   theme_minimal()
 
+######### arquivo 14 (renda total da familia)
+arquivo14 <- read_delim("microdados2018_arq14.txt", 
+                        delim = ";", escape_double = FALSE, trim_ws = TRUE)
+
+teste <- inner_join(arq3, arquivo14, by = "CO_CURSO")
+
+
+teste %>%
+  filter(!is.na(QE_I08),
+         QE_I08 %in% c("A", "B", "C", "D", "E", "F", "G")) %>%
+  ggplot() +
+  aes(x = nota_media, fill = QE_I08) +
+  geom_density(adjust = 1L, alpha = 0.7) +
+  scale_fill_hue(direction = 1, 
+                 labels = c('Até 1,5 salário mínimo',
+                            'De 1,5 a 3 salários mínimos',
+                            'De 3 a 4,5 salários mínimos',
+                            'De 4,5 a 6 salários mínimos',
+                            'De 6 a 10 salários mínimos',
+                            'De 10 a 30 salários mínimos',
+                            'Acima de 30 salários mínimos')) +
+  labs(x = "Nota média",
+       y = " ",
+       fill = "Renda total da família") +
+  theme_minimal()
+
+
+######### arquivo 21 (entrou na graduacao por cota?)
+arquivo21 <- read_delim("microdados2018_arq21.txt", 
+                        delim = ";", escape_double = FALSE, trim_ws = TRUE)
+
+teste <- inner_join(arq3, arquivo21, by = "CO_CURSO")
+
+teste <- teste %>% 
+  mutate(cota = ifelse(QE_I15 == "A", "nao", "sim"))
+
+teste %>%
+  filter(!is.na(cota)) %>% 
+  ggplot() +
+  aes(x = nota_media, fill = cota) +
+  geom_density(adjust = 1L, alpha = 0.3) +
+  scale_fill_hue(direction = 1) +
+  labs(x = "Nota média",
+       y = " ",
+       fill = "Cotista?") +
+  theme_minimal()
