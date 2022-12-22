@@ -4,7 +4,7 @@ library(tidyverse)
 setwd("C:\\Users\\gusta\\OneDrive\\FEARP\\2º semestre\\Didática\\trabalho\\microdados_enade_2018_LGPD\\microdados_Enade_2018_LGPD\\2.DADOS")
 
 
-# arquivo 1
+######### arquivo 1
 arquivo1 <- read_delim("microdados2018_arq1.txt", 
                        delim = ";", escape_double = FALSE, trim_ws = TRUE) 
 
@@ -15,7 +15,7 @@ arq1 <- arquivo1 %>%
   select(-CO_GRUPO)
 
 
-# arquivo 3
+######### arquivo 3
 arquivo3 <- read_delim("microdados2018_arq3.txt", 
                        delim = ";", escape_double = FALSE, trim_ws = TRUE)
 
@@ -37,7 +37,7 @@ df <- inner_join(arq1, arq3, by = "CO_CURSO") %>%
   distinct(CO_CURSO, .keep_all = TRUE)
 
 
-# arquivo 5 (sexo)
+######### arquivo 5 (sexo)
 arquivo5 <- read_delim("microdados2018_arq5.txt", 
                        delim = ";", escape_double = FALSE, trim_ws = TRUE)
 
@@ -67,5 +67,24 @@ ggplot(df) +
   theme_classic()
 
 
+######### arquivo 8 (cor/raca)
+arquivo8 <- read_delim("microdados2018_arq8.txt", 
+                       delim = ";", escape_double = FALSE, trim_ws = TRUE)
 
+arq8 <- arquivo8 %>% 
+  mutate(negros_dummy = case_when(QE_I02 == "A" ~ 0,
+                                  QE_I02 == "B" ~ 1,
+                                  QE_I02 == "D" ~ 1,
+                                  QE_I02 == "E" ~ 1)) %>% 
+  group_by(CO_CURSO) %>% 
+  mutate(media_negros = mean(negros_dummy, na.rm = T)) %>% 
+  # removendo duplicatas
+  distinct(CO_CURSO, .keep_all = TRUE) %>% 
+  ungroup()
 
+# join no dataset principal
+df <- inner_join(df, arq8, by = "CO_CURSO") %>% 
+  distinct(CO_CURSO, .keep_all = TRUE) 
+
+df <- df %>% 
+  select(-c("NU_ANO", "QE_I02", "negros_dummy"))
